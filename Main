@@ -1,0 +1,122 @@
+import axios from 'axios';
+
+class Transaction {
+    constructor(
+        public fromAddress: string,
+        public toAddress: string,
+        public amount: number
+    ) {}
+}
+
+class Block {
+    public timestamp: Date;
+    public transactions: Transaction[];
+    public previousHash: string;
+    public hash: string;
+    public nonce: number;
+
+    constructor(timestamp: Date, transactions: Transaction[], previousHash: string = '') {
+        this.timestamp = timestamp;
+        this.transactions = transactions;
+        this.previousHash = previousHash;
+        this.hash = this.calculateHash();
+        this.nonce = 0;
+    }
+
+    calculateHash(): string {
+        const crypto = require('crypto');
+        const hash = crypto.createHash('sha256');
+        return hash.update(this.previousHash + this.timestamp + JSON.stringify(this.transactions) + this.nonce).digest('hex');
+    }
+}
+
+class Blockchain {
+    public chain: Block[];
+    public pendingTransactions: Transaction[];
+    public difficulty: number;
+    public addresses: string[];
+
+    constructor() {
+        this.chain = [this.createGenesisBlock()];
+        this.pendingTransactions = [];
+        this.difficulty = 4;
+        this.addresses = [];
+    }
+
+    createGenesisBlock(): Block {
+        return new Block(new Date(), [], '0');
+    }
+
+    getLatestBlock(): Block {
+        return this.chain[this.chain.length - 1];
+    }
+
+    createTransaction(transaction: Transaction): void {
+        this.pendingTransactions.push(transaction);
+    }
+
+    getAddress(): string {
+        const crypto = require('crypto');
+        let address = '0x';
+        for (let i = 0; i < 11; i++) {
+            address += crypto.randomBytes(4).toString('hex');
+        }
+        this.addresses.push(address);
+        return address;
+    }
+
+    addTransactionToPendingTransactions(transaction: Transaction): void {
+        this.pendingTransactions.push(transaction);
+    }
+
+    async plantTree(quantity: number, message: string): Promise<void> {
+        const apiUrl = 'https://tree-nation.com/api/plant';
+        const requestBody = {
+            quantity: quantity,
+            message: message
+        };
+
+        try {
+            const response = await axios.post(apiUrl, requestBody, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log('Tree planted successfully:', response.data);
+        } catch (error) {
+            console.error('Error planting tree:', error);
+        }
+    }
+
+    minePendingTransactions(miningRewardAddress: string): void {
+        const block = new Block(new Date(), this.pendingTransactions);
+        block.previousHash = this.getLatestBlock().hash;
+        block.calculateHash();
+        this.chain.push(block);
+
+        this.plantTree(1, 'KlimaHeld Transaction');
+        
+        this.pendingTransactions = [
+            new Transaction(null, miningRewardAddress, 100) // Belohnungstransaktion
+        ];
+    }
+}
+
+// Beispiel für die Verwendung des Blockchain
+
+const myCoin = new Blockchain();
+
+// Erstellen einiger Transaktionen
+const address1 = myCoin.getAddress();
+const address2 = myCoin.getAddress();
+
+console.log('Address 1:', address1);
+console.log('Address 2:', address2);
+
+myCoin.createTransaction(new Transaction(address1, address2, 100));
+myCoin.createTransaction(new Transaction(address2, address1, 50));
+
+// Mining und Ausgabe des Blocks entfernt
+
+// Überprüfen der Blockchain
+console.log(JSON.stringify(myCoin.chain, null, 4));
