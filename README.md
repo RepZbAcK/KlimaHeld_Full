@@ -69,6 +69,32 @@ node src/cli.js --network testnet
 npm test
 ```
 
+### Schnellstart auf macOS (Projekt auf dem Schreibtisch)
+
+Falls sich dein Projektordner beispielsweise unter
+`~/Desktop/KlimaHeld_Full-codex-analyse-currency-and-refine-main-testnet-code`
+befindet, kannst du folgende Befehle direkt im Terminal ausführen:
+
+```bash
+# In den Projektordner auf dem Schreibtisch wechseln
+cd ~/Desktop/KlimaHeld_Full-codex-analyse-currency-and-refine-main-testnet-code
+
+# Abhängigkeiten installieren (nur einmal nötig)
+npm install
+
+# Testnet-Demo ohne Baum-API-Aufrufe starten
+npm run demo
+
+# Optional: Mainnet-Konfiguration testen (Baum-API bleibt ohne Netz nicht aktiv)
+npm run demo:mainnet
+
+# Automatisierte Tests laufen lassen
+npm test
+```
+
+Damit kannst du auf einem Mac unmittelbar von deinem Schreibtisch-Verzeichnis
+aus loslegen, ohne echte Bäume zu pflanzen.
+
 ### Netzwerkkonfigurationen
 
 | Netzwerk  | Schwierigkeit | Blockbelohnung | Baum-API |
