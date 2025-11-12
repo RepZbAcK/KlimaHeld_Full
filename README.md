@@ -37,19 +37,36 @@ Blockchain-Implementierung mit einem optionalen Aufruf an einen Baum-pflanz-Serv
 
 ## Verwendung
 
-Der Einstiegspunkt liegt in `src/index.js`. Das Skript stellt eine Demo bereit, die
-Transaktionen anlegt, einen Block mined und den resultierenden Zustand ausgibt. Über
-Parameter kann zwischen Mainnet- und Testnet-Konfiguration gewechselt werden.
+Der Einstiegspunkt für Anwender ist die CLI in `src/cli.js`. Sie nutzt das
+Modul `src/index.js`, welches Blockchain, Blöcke, Transaktionen und die Demo-Funktion
+exportiert.
+
+### Installation
+
+```bash
+npm install
+```
+
+### Demo ausführen
 
 ```bash
 # Testnet (Standard)
-node src/index.js
+npm run demo
 
 # Mainnet-Demo
-node src/index.js mainnet
+npm run demo:mainnet
 
-# Konkretes Testnet-Label (Groß-/Kleinschreibung egal)
-node src/index.js TESTNET
+# Netzwerke anzeigen
+npm run demo -- --list-networks
+
+# Alternative Schreibweise
+node src/cli.js --network testnet
+```
+
+### Tests
+
+```bash
+npm test
 ```
 
 ### Netzwerkkonfigurationen
@@ -84,3 +101,29 @@ chain.createTransaction(sender, receiver, 10);
 await chain.minePendingTransactions(chain.generateAddress());
 console.log(chain.chain);
 ```
+
+## Synchronisation mit GitHub
+
+1. Lege ein neues Repository auf GitHub an und kopiere dessen URL.
+2. Richte das Remote in deinem lokalen Projekt ein:
+
+   ```bash
+   git remote add origin <deine-github-url>
+   ```
+
+3. Prüfe, welche Dateien übernommen werden sollen:
+
+   ```bash
+   git status
+   ```
+
+4. Committe die Änderungen und pushe sie nach GitHub:
+
+   ```bash
+   git add .
+   git commit -m "Deine Nachricht"
+   git push -u origin <branch-name>
+   ```
+
+5. Erstelle bei Bedarf einen Pull Request direkt auf GitHub, um Code Reviews zu
+   ermöglichen.

@@ -1,0 +1,22 @@
+{
+  "name": "klimaheld-blockchain",
+  "version": "0.2.0",
+  "description": "Demo-Blockchain mit Mainnet/Testnet-Konfiguration für KlimaHeld",
+  "main": "src/index.js",
+  "bin": {
+    "klimaheld": "src/cli.js"
+  },
+  "scripts": {
+    "demo": "node src/cli.js",
+    "demo:mainnet": "node src/cli.js --network mainnet",
+    "demo:testnet": "node src/cli.js --network testnet",
+    "test": "node --test"
+  },
+  "keywords": [
+    "blockchain",
+    "klima",
+    "demo"
+  ],
+  "author": "",
+  "license": "MIT"
+}
