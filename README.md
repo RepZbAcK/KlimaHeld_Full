@@ -43,6 +43,16 @@ exportiert.
 
 ### Installation
 
+Falls `npm` auf deinem Mac nicht gefunden wird, installiere zunächst Node (inklusive
+`npm`) über Homebrew:
+
+```bash
+brew install node
+```
+
+Prüfe anschließend die Versionen mit `node --version` und `npm --version`. Sobald
+beide Befehle funktionieren, kannst du die Projektabhängigkeiten installieren:
+
 ```bash
 npm install
 ```
