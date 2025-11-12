@@ -95,6 +95,20 @@ npm test
 Damit kannst du auf einem Mac unmittelbar von deinem Schreibtisch-Verzeichnis
 aus loslegen, ohne echte Bäume zu pflanzen.
 
+### Schnelle Terminalbefehle (Kurzfassung)
+
+Wenn du nur schnell die wichtigsten Befehle brauchst, kannst du diese Reihenfolge
+verwenden:
+
+1. `cd ~/Desktop/KlimaHeld_Full-codex-analyse-currency-and-refine-main-testnet-code`
+2. `npm install`
+3. `npm run demo`
+4. `npm test`
+
+So stellst du sicher, dass du im richtigen Ordner bist, alle Abhängigkeiten
+installierst, die Testnet-Demo startest und abschließend die automatisierten
+Tests laufen lässt.
+
 ### Netzwerkkonfigurationen
 
 | Netzwerk  | Schwierigkeit | Blockbelohnung | Baum-API |
