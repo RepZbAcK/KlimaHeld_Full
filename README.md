@@ -1,24 +1,179 @@
 # KlimaHeld Blockchain
 
-Die KlimaHeld Blockchain ist eine Kryptowährung, die dazu dient, den Kampf gegen den Klimawandel zu unterstützen, indem sie umweltfreundliches Verhalten fördert und die Pflanzung von Bäumen ermöglicht.
+Die KlimaHeld Blockchain ist eine bewusst schlank gehaltene Demonstration, wie eine
+Kryptowährung nachhaltig ausgerichtet werden könnte. Sie kombiniert eine einfache
+Blockchain-Implementierung mit einem optionalen Aufruf an einen Baum-pflanz-Service.
+
+## Analyse der aktuellen Währung
+
+* **Konsensmechanismus** – Die Blockchain nutzt ein Proof-of-Work-Miningschema mit
+  einstellbarer Schwierigkeit. Für einen echten Einsatz fehlt jedoch ein
+  Peer-to-Peer-Netzwerk, das die Blöcke verteilt und verifiziert.
+* **Transaktionssicherheit** – Transaktionen werden aktuell nicht digital signiert.
+  Dadurch kann jede Instanz Transaktionen im Namen anderer Adressen erzeugen. Für
+  einen produktiven Einsatz wären kryptografische Signaturen (z. B. ECDSA) nötig.
+* **Token-Ökonomie** – Die Blockbelohnung ist statisch. Eine langfristige Geldpolitik
+  (z. B. schrittweise Halbierung oder Gebührenmodelle) ist sinnvoll, um Inflation zu
+  steuern.
+* **Baumpflanz-Integration** – Der Code unterstützt das Pflanzen eines Baumes pro
+  Block. In Produktionsumgebungen muss abgesichert werden, dass der externe Dienst
+  zuverlässig erreichbar ist und Fehlerbehandlung sowie Monitoring vorhanden sind.
+* **Testbarkeit** – Durch die Trennung in Mainnet- und Testnet-Konfigurationen können
+  neue Funktionen zuerst unter reduzierter Schwierigkeit erprobt werden, bevor sie im
+  produktiven Netzwerk landen.
+
+### Empfehlungen für den weiteren Ausbau
+
+1. **Signaturen einführen** – Verwende pro Adresse ein Schlüsselpaar und signiere
+   Transaktionen. Validierung sollte bereits beim Hinzufügen zur Pending-Liste
+   erfolgen.
+2. **Netzwerkebene aufbauen** – Erstelle einen Node, der Blöcke und Transaktionen per
+   HTTP/WebSocket austauscht. Ein Gossip-Protokoll erhöht die Ausfallsicherheit.
+3. **Ökonomische Parameter evaluieren** – Definiere eine klare Tokenomics-Strategie
+   (Emission, Gebühren, Nutzung für Klimaprojekte). Binde reale Klimadaten als
+   Oracles ein.
+4. **Observability** – Ergänze Logging, Metriken und Alarmierung für Mining und
+   Baumpflanz-Requests, um Fehlersituationen schnell zu erkennen.
 
 ## Verwendung
 
-Um die Blockchain zu verwenden, können Sie das `Blockchain`-Objekt instanziieren und Transaktionen hinzufügen. Die Transaktionen werden automatisch validiert und in Blöcken gespeichert.
+Der Einstiegspunkt für Anwender ist die CLI in `src/cli.js`. Sie nutzt das
+Modul `src/index.js`, welches Blockchain, Blöcke, Transaktionen und die Demo-Funktion
+exportiert.
 
-Beispiel:
+### Installation
+
+Falls `npm` auf deinem Mac nicht gefunden wird, installiere zunächst Node (inklusive
+`npm`) über Homebrew:
+
+```bash
+brew install node
+```
+
+Prüfe anschließend die Versionen mit `node --version` und `npm --version`. Sobald
+beide Befehle funktionieren, kannst du die Projektabhängigkeiten installieren:
+
+```bash
+npm install
+```
+
+### Demo ausführen
+
+```bash
+# Testnet (Standard)
+npm run demo
+
+# Mainnet-Demo
+npm run demo:mainnet
+
+# Netzwerke anzeigen
+npm run demo -- --list-networks
+
+# Alternative Schreibweise
+node src/cli.js --network testnet
+```
+
+### Tests
+
+```bash
+npm test
+```
+
+### Schnellstart auf macOS (Projekt auf dem Schreibtisch)
+
+Falls sich dein Projektordner beispielsweise unter
+`~/Desktop/KlimaHeld_Full-codex-analyse-currency-and-refine-main-testnet-code`
+befindet, kannst du folgende Befehle direkt im Terminal ausführen:
+
+```bash
+# In den Projektordner auf dem Schreibtisch wechseln
+cd ~/Desktop/KlimaHeld_Full-codex-analyse-currency-and-refine-main-testnet-code
+
+# Abhängigkeiten installieren (nur einmal nötig)
+npm install
+
+# Testnet-Demo ohne Baum-API-Aufrufe starten
+npm run demo
+
+# Optional: Mainnet-Konfiguration testen (Baum-API bleibt ohne Netz nicht aktiv)
+npm run demo:mainnet
+
+# Automatisierte Tests laufen lassen
+npm test
+```
+
+Damit kannst du auf einem Mac unmittelbar von deinem Schreibtisch-Verzeichnis
+aus loslegen, ohne echte Bäume zu pflanzen.
+
+### Schnelle Terminalbefehle (Kurzfassung)
+
+Wenn du nur schnell die wichtigsten Befehle brauchst, kannst du diese Reihenfolge
+verwenden:
+
+1. `cd ~/Desktop/KlimaHeld_Full-codex-analyse-currency-and-refine-main-testnet-code`
+2. `npm install`
+3. `npm run demo`
+4. `npm test`
+
+So stellst du sicher, dass du im richtigen Ordner bist, alle Abhängigkeiten
+installierst, die Testnet-Demo startest und abschließend die automatisierten
+Tests laufen lässt.
+
+### Netzwerkkonfigurationen
+
+| Netzwerk  | Schwierigkeit | Blockbelohnung | Baum-API |
+|-----------|---------------|----------------|----------|
+| mainnet   | 4             | 100 KLH        | Aktiv    |
+| testnet   | 2             | 25 KLH         | Deaktiv  |
+
+Die Testnet-Konfiguration reduziert den Mining-Aufwand und deaktiviert das
+Baumpflanzen, damit lokale Experimente keine realen Kosten verursachen.
+
+## Programmierschnittstelle
+
+Das Modul exportiert folgende Klassen und Hilfsfunktionen:
+
+* `Transaction` – Repräsentiert eine Überweisung.
+* `Block` – Bündelt Transaktionen und enthält Proof-of-Work-Funktionalität.
+* `Blockchain` – Verwaltung der Kette inklusive Mining, Adressgenerierung und
+  Saldenberechnung.
+* `NETWORKS` – Vordefinierte Konfigurationsobjekte für Mainnet und Testnet.
+* `runDemo(networkName)` – Führt die oben beschriebene Demo programmgesteuert aus.
 
 ```javascript
-const { Blockchain, Transaction } = require('./blockchain');
+const { Blockchain, NETWORKS } = require('./src/index');
 
-const myCoin = new Blockchain();
+const chain = new Blockchain(NETWORKS.testnet);
+const sender = chain.generateAddress();
+const receiver = chain.generateAddress();
 
-const address1 = myCoin.getAddress();
-const address2 = myCoin.getAddress();
+chain.createTransaction(sender, receiver, 10);
+await chain.minePendingTransactions(chain.generateAddress());
+console.log(chain.chain);
+```
 
-myCoin.createTransaction(new Transaction(address1, address2, 100));
-myCoin.createTransaction(new Transaction(address2, address1, 50));
+## Synchronisation mit GitHub
 
-myCoin.minePendingTransactions('miner-address');
+1. Lege ein neues Repository auf GitHub an und kopiere dessen URL.
+2. Richte das Remote in deinem lokalen Projekt ein:
 
-console.log(JSON.stringify(myCoin.chain, null, 4));
+   ```bash
+   git remote add origin <deine-github-url>
+   ```
+
+3. Prüfe, welche Dateien übernommen werden sollen:
+
+   ```bash
+   git status
+   ```
+
+4. Committe die Änderungen und pushe sie nach GitHub:
+
+   ```bash
+   git add .
+   git commit -m "Deine Nachricht"
+   git push -u origin <branch-name>
+   ```
+
+5. Erstelle bei Bedarf einen Pull Request direkt auf GitHub, um Code Reviews zu
+   ermöglichen.
